@@ -6,6 +6,7 @@ import 'express-async-errors';
 
 import routes from './routes';
 import AppError from './errors/AppError';
+import TransactionError from './errors/TransactionError';
 
 import createConnection from './database';
 
@@ -20,6 +21,13 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
     return response.status(err.statusCode).json({
       status: 'error',
       message: err.message,
+    });
+  }
+
+  if (err instanceof TransactionError) {
+    return response.status(err.statusCode).json({
+      status: 'error',
+      error: err.message,
     });
   }
 
